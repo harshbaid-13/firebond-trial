@@ -1,95 +1,152 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import { useState } from "react";
 
 export default function Home() {
+  const data = [{ varName: "My Arg", value: false }];
+  const [dataVariables, setDataVariables] = useState(data);
+  const [action, setAction] = useState("reset");
+  const dataOperation = {
+    operation: dataVariables[0].varName,
+    value: {},
+    header: "reset",
+  };
+  const [dataOperations, setDataOperations] = useState(dataOperation);
+  const Option_argument = () => {
+    return (
+      <select
+        name={dataVariables[0].varName}
+        onChange={(e) => {
+          setAction(e.target.value);
+        }}
+      >
+        {/* <option value={action} disabled selected>
+            select...
+          </option> */}
+        {dataVariables.map((item, index) => (
+          <option key={index} value={item.varName}>
+            {item.varName}
+          </option>
+        ))}
+      </select>
+    );
+  };
+  const Option_constant = () => {
+    return (
+      <select name={"constant"} onChange={(e) => {}}>
+        <option value={false}>false</option>
+        <option value={true}>true</option>
+      </select>
+    );
+  };
+  const Option_reset = () => {
+    return (
+      <select
+        name={"reset"}
+        onChange={(e) => {
+          setAction(e.target.value);
+        }}
+      >
+        <option value={"select..."} disabled selected>
+          select...
+        </option>
+        <option value={"constant"}>constant</option>
+        <option value={"argument"}>argument</option>
+        <option value={"and"}>and</option>
+        <option value={"or"}>or</option>
+      </select>
+    );
+  };
+  const Option_and = () => {
+    return (
+      <>
+        <select
+          name={"and"}
+          onChange={(e) => {
+            setAction(e.target.value);
+          }}
+        >
+          <option value={"and"} selected>
+            and
+          </option>
+          <option value={"constant"}>constant</option>
+          <option value={"argument"}>argument</option>
+          <option value={"or"}>or</option>
+        </select>
+        <ul style={{ listStyle: "none", margin: 0 }}>
+          <li>
+            <Option_reset />
+          </li>
+          <li>
+            <Option_reset />
+          </li>
+        </ul>
+      </>
+    );
+  };
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <>
+      {dataVariables.map((item, index) => {
+        return (
+          <div key={index}>
+            <input
+              type="text"
+              value={item.varName}
+              onChange={(e) => {
+                let newArr = [...dataVariables];
+                newArr[index].varName = e.target.value;
+                setDataVariables(newArr);
+              }}
             />
-          </a>
-        </div>
-      </div>
+            <select
+              name={item.varName}
+              onChange={(e) => {
+                let newArr = [...dataVariables];
+                newArr[index].value = e.target.value;
+                setDataVariables(newArr);
+              }}
+            >
+              <option value={false}>false</option>
+              <option value={true}>true</option>
+            </select>
+          </div>
+        );
+      })}
+      <button
+        style={{ marginBottom: "15px" }}
+        type="button"
+        onClick={() =>
+          setDataVariables([
+            ...dataVariables,
+            { varName: "New Arg", value: false },
+          ])
+        }
+      >
+        + add arg
+      </button>
+      <br />
+      {action === "reset" ? (
+        <Option_reset />
+      ) : action === "constant" ? (
+        <Option_constant />
+      ) : action === "argument" ? (
+        <Option_argument />
+      ) : action === "and" ? (
+        <Option_and />
+      ) : action === "or" ? (
+        <Option_or />
+      ) : (
+        <> </>
+      )}
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <button
+        type="button"
+        onClick={() => {
+          setAction("reset");
+        }}
+      >
+        x
+      </button>
+      <div style={{ marginTop: "20px" }}>result: {dataVariables[0].value}</div>
+    </>
+  );
 }
